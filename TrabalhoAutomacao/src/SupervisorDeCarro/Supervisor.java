@@ -473,7 +473,7 @@ public class Supervisor implements ObservadorSupervisor{
 		}
 	}
 	
-	private void testeQualquer(){
+	private void testeQualquer1(){
 		
 	}
 	
