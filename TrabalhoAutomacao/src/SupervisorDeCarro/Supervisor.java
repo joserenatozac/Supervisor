@@ -473,4 +473,9 @@ public class Supervisor implements ObservadorSupervisor{
 			return false;
 		}
 	}
+	
+	private void testeQualquer1(){
+		
+	}
+	
 }
