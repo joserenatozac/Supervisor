@@ -11,7 +11,7 @@ import Util.ParOrdenado;
 import Util.TipoInfracoes;
 
 public class Supervisor implements ObservadorSupervisor{
-	private ArrayList<Infracao> infracoes; //(atributo)
+	private ArrayList<Infracao> infracoes; //(atr ibuto)
 	private HashMap<Integer, Carro> carros;
 	private HashMap<Integer, InformacoesCarro> informacoesCarros;
 	private double tempoInicioProvaSegundos;
@@ -107,13 +107,48 @@ public class Supervisor implements ObservadorSupervisor{
 		}
 		else
 		{
-		// regra 2 desisti de fazer mt grande vish
-		//int via = getVia(par1);
-		//for (Carro c : carros){
-			//ParOrdenado parC = c.getPosicao();
-			//int viaC = getVia(parC);
-		//}
-		
+			// regra 2 desisti de fazer mt grande vish
+			//int via = getVia(par1);
+		    ParOrdenado parC = carro.getPosicao();		
+			int viaC=getVia(parC);
+			Collection<Carro> todosCarros = carros.values();
+			for (Carro c1 : todosCarros){
+				ParOrdenado parC1 = c1.getPosicao();
+				int viaC1 = getVia(parC1);
+				if (viaC==viaC1){ //se as vias são iguais posso multar
+					if(viaC1==1 ||viaC1==3 ||viaC1==6 ||viaC1==8){ //nessas vias se ele esta atrás do carro sua coordenada e menor
+						double x = parC.getX();
+						double x1 = parC1.getX();
+						double y = parC.getY();
+						double y1 = parC1.getY();
+						if ((y>y1)||(x>x1)) { //coordenada maior?
+							if (verifRegra2(parC,parC1)) 
+							{
+								Infracao infracao = new Infracao(carroId, 5 ,  TipoInfracoes.REGRA2.getTipoInfracao());
+								infracoes.add(infracao);
+								int multa = 5;
+								carro.addPontuacao(multa);
+							}
+						}
+					}
+					
+					else if(viaC1==2 ||viaC1==4 ||viaC1==5 ||viaC1==7){ //nessas vias se ele esta atrás do carro sua coordenada e maior
+						double x = parC.getX();
+						double x1 = parC1.getX();
+						double y = parC.getY();
+						double y1 = parC1.getY();
+						if ((y<y1)||(x<x1)) { //coordenada menor?
+							if (verifRegra2(parC,parC1))
+							{
+								Infracao infracao = new Infracao(carroId, 5 ,  TipoInfracoes.REGRA2.getTipoInfracao());
+								infracoes.add(infracao);
+								int multa = 5;
+								carro.addPontuacao(multa);
+							}
+						}
+					}
+				}
+			}
 		//multando pela regra 3
 			if (verifRegra3(velocidade))
 			{
