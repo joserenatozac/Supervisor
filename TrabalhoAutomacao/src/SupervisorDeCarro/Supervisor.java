@@ -107,8 +107,7 @@ public class Supervisor implements ObservadorSupervisor{
 		}
 		else
 		{
-			// regra 2 desisti de fazer mt grande vish
-			//int via = getVia(par1);
+			// regra 2 
 		    ParOrdenado parC = carro.getPosicao();		
 			int viaC=getVia(parC);
 			Collection<Carro> todosCarros = carros.values();
@@ -116,7 +115,8 @@ public class Supervisor implements ObservadorSupervisor{
 				ParOrdenado parC1 = c1.getPosicao();
 				int viaC1 = getVia(parC1);
 				if (viaC==viaC1){ //se as vias são iguais posso multar
-					if(viaC1==1 ||viaC1==3 ||viaC1==6 ||viaC1==8){ //nessas vias se ele esta atrás do carro sua coordenada e menor
+					if(viaC1==1 ||viaC1==3 ||viaC1==6 ||viaC1==8)
+					{ //nessas vias se ele esta atrás do carro sua coordenada e menor
 						double x = parC.getX();
 						double x1 = parC1.getX();
 						double y = parC.getY();
@@ -132,7 +132,8 @@ public class Supervisor implements ObservadorSupervisor{
 						}
 					}
 					
-					else if(viaC1==2 ||viaC1==4 ||viaC1==5 ||viaC1==7){ //nessas vias se ele esta atrás do carro sua coordenada e maior
+					else if(viaC1==2 ||viaC1==4 ||viaC1==5 ||viaC1==7)
+					{ //nessas vias se ele esta atrás do carro sua coordenada e maior
 						double x = parC.getX();
 						double x1 = parC1.getX();
 						double y = parC.getY();
