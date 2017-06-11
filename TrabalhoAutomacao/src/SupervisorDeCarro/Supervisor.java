@@ -11,7 +11,7 @@ import Util.ParOrdenado;
 import Util.TipoInfracoes;
 
 public class Supervisor implements ObservadorSupervisor{
-	private ArrayList<Infracao> infracoes; //(atr ibuto)
+	private ArrayList<Infracao> infracoes; //(atributo)
 	private HashMap<Integer, Carro> carros;
 	private HashMap<Integer, InformacoesCarro> informacoesCarros;
 	private double tempoInicioProvaSegundos;
@@ -121,7 +121,8 @@ public class Supervisor implements ObservadorSupervisor{
 						double x1 = parC1.getX();
 						double y = parC.getY();
 						double y1 = parC1.getY();
-						if ((y>y1)||(x>x1)) { //coordenada maior?
+						if ((y>y1)||(x>x1))
+						{ //coordenada maior?
 							if (verifRegra2(parC,parC1)) 
 							{
 								Infracao infracao = new Infracao(carroId, 5 ,  TipoInfracoes.REGRA2.getTipoInfracao());
@@ -473,9 +474,4 @@ public class Supervisor implements ObservadorSupervisor{
 			return false;
 		}
 	}
-	
-	private void testeQualquer1(){
-		
-	}
-	
 }
