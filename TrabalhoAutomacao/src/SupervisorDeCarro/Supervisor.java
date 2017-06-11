@@ -15,6 +15,8 @@ public class Supervisor implements ObservadorSupervisor{
 	private HashMap<Integer, InformacoesCarro> informacoesCarros;
 	private double tempoInicioProvaSegundos;
 	private boolean jaVerifiqueiRegra6;
+	private ArrayList<Carro> carrosNoPare;
+	private Carro carroFazendoConversao;
 	
 	private final double distMin = 2;
 	private final double velMax = 10;
@@ -29,6 +31,7 @@ public class Supervisor implements ObservadorSupervisor{
 		informacoesCarros = new HashMap<Integer, InformacoesCarro>();
 		tempoInicioProvaSegundos = getTempoAtualSegundos();
 		jaVerifiqueiRegra6 = false;
+		carrosNoPare = new ArrayList<>();
 	}
 	
 	public void adicionaCarros(Carro carro)
@@ -183,7 +186,9 @@ public class Supervisor implements ObservadorSupervisor{
 		{
 			jaVerifiqueiRegra6 = true;
 			VerifRegra6();
-		}		
+		}
+		verifRegra7();
+		controleCruzamento(carro);
 	}
 
 	public ArrayList<Infracao> getInfracoes(){
@@ -449,9 +454,27 @@ public class Supervisor implements ObservadorSupervisor{
 	 *  a distancia X ou Y dele é fixa e pré-estabelecida pra cada via
 	 *  Se a distancia não for a mesma, significa que ele virou pro lado errado. 
 	 */
-	private boolean verifRegra7 (double[] par1)
+	private void verifRegra7 ()
 	{
-		return false;
+		if(carroFazendoConversao != null)
+		{
+			double pos[] = carroFazendoConversao.getPosicao();
+			int viaCarroSeEncontra = getVia(pos);
+			if(viaCarroSeEncontra != 0)
+			{
+				int carroId = carroFazendoConversao.getCarroId();
+				InformacoesCarro infoCarro = informacoesCarros.get(carroId);
+				if(viaCarroSeEncontra != infoCarro.getViaDeConversao())
+				{//Aplica multa pela regra 7
+					Infracao infracao = new Infracao(carroId, 5 ,  TipoInfracoes.REGRA7.getTipoInfracao());
+					infracoes.add(infracao);
+					int multa = 5;
+					carroFazendoConversao.addPontuacao(multa);
+				}
+				//Carro não está mais fazendo a conversão
+				carroFazendoConversao = null;
+			}
+		}
 	}
 
 	
@@ -459,10 +482,6 @@ public class Supervisor implements ObservadorSupervisor{
 
 	private boolean verifRegra8 (double[] posicao, double velocidade)
 	{ 
-		double valorX= posicao[0];
-		double valorY= posicao[1];
-		
-		
 		int i = getLocalizarPare(posicao);
 		if (i!=-1)
 		{
@@ -478,6 +497,48 @@ public class Supervisor implements ObservadorSupervisor{
 		else
 		{
 			return false;
+		}
+	}
+	
+	private void controleCruzamento(Carro carro)
+	{
+		double pos[] = carro.getPosicao();
+		int posNaFila = carrosNoPare.indexOf(carro);
+		if(getLocalizarPare(pos) != -1 && posNaFila == -1)
+		{
+			carrosNoPare.add(carro);
+			int via = getVia(pos);
+			int viaDesejada = calculaViaDesejada(carro.getSentidoConversao(), via);
+			if(viaDesejada != -1)
+			{
+				InformacoesCarro infoCarro = informacoesCarros.get(carro.getCarroId());
+				infoCarro.setViaDeConversao(viaDesejada);
+			}
+		}
+		if(carroFazendoConversao == null && carrosNoPare.size() > 0)
+		{
+			chamarMetodoQuePermiteCarroFazerConversao(carrosNoPare.remove(0));
+		}
+	}
+
+	private void chamarMetodoQuePermiteCarroFazerConversao(Carro carro)
+	{
+		// TODO Alguma coisa que deixa o carro fazer a curva
+		carroFazendoConversao = carro;
+	}
+
+	private int calculaViaDesejada(int sentidoConversao, int via)
+	{
+		switch(sentidoConversao)
+		{
+			case 1:
+				return (via + 5)%8;
+			case 2:
+				return (via + 3)%8;
+			case 3:
+				return (via + 1)%8;
+			default:
+				return -1;
 		}
 	}
 }

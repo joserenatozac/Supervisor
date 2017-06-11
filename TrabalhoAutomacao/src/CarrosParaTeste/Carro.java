@@ -10,6 +10,7 @@ public class Carro implements ObservadoSupervisor
 	private double[] posicao;
 	private double velocidade;
 	private static int numCarros;
+	private int sentidoConversao;
 	private int pontuacao;
 	
 	public Carro()
@@ -74,5 +75,14 @@ public class Carro implements ObservadoSupervisor
 		return velocidade;
 	}
 	
+	public void setSentidoConversao(int sentidoConversao)
+	{
+		this.sentidoConversao = sentidoConversao;
+	}
+	
+	public int getSentidoConversao()
+	{
+		return sentidoConversao;
+	}
 	
 }

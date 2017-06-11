@@ -6,6 +6,7 @@ public class InformacoesCarro
 	private double ultimoTempo;
 	private double[] ultimaPosicao;
 	private double ultimaVelocidade;
+	private int viaDeConversao;
 	
 	public InformacoesCarro(int carroId, double ultimoTempo, double[] ultimaPosicao, double ultimaVelocidade)
 	{
@@ -48,5 +49,13 @@ public class InformacoesCarro
 
 	public void setUltimoTempo(double ultimoTempo) {
 		this.ultimoTempo = ultimoTempo;
+	}
+	
+	public int getViaDeConversao() {
+		return viaDeConversao;
+	}
+
+	public void setViaDeConversao(int viaDeConversao) {
+		this.viaDeConversao = viaDeConversao;
 	}
 }
