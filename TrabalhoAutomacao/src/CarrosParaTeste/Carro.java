@@ -1,14 +1,14 @@
 package CarrosParaTeste;
 import java.util.ArrayList;
 import SupervisorDeCarro.ObservadorSupervisor;
-import Util.ParOrdenado;
+
 
 public class Carro implements ObservadoSupervisor
 {
 	private ArrayList<ObservadorSupervisor> observadores;
 	private int carroId;
-	private ParOrdenado posicao;
-	private ParOrdenado velocidade;
+	private double[] posicao;
+	private double velocidade;
 	private static int numCarros;
 	private int pontuacao;
 	
@@ -16,8 +16,7 @@ public class Carro implements ObservadoSupervisor
 	{
 		numCarros++;
 		carroId = numCarros;
-		posicao = new ParOrdenado();
-		velocidade = new ParOrdenado();
+		posicao = null;
 		observadores = new ArrayList<>();
 	}
 	
@@ -28,15 +27,14 @@ public class Carro implements ObservadoSupervisor
 	
 	public void setPosicao(double x, double y)
 	{
-		posicao.setX(x);
-		posicao.setY(y);
+		posicao[0]=x;
+		posicao[1]=y;
 		notificaObservadores();
 	}
 	
 	public void setVelocidade(double x, double y)
 	{
-		velocidade.setX(x);
-		velocidade.setY(y);
+		velocidade=y;
 		notificaObservadores();
 	}
 	
@@ -44,7 +42,7 @@ public class Carro implements ObservadoSupervisor
 		pontuacao = pontuacao + p;
 	}
 	
-	public ParOrdenado getPosicao()
+	public double[] getPosicao()
 	{
 		return posicao;
 	}
@@ -72,7 +70,7 @@ public class Carro implements ObservadoSupervisor
 		}
 	}
 
-	public ParOrdenado getVelocidade() {
+	public double getVelocidade() {
 		return velocidade;
 	}
 	
