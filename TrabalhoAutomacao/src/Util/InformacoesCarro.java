@@ -4,15 +4,16 @@ public class InformacoesCarro
 {
 	private int carroId;
 	private double ultimoTempo;
-	private ParOrdenado ultimaPosicao;
-	private ParOrdenado ultimaVelocidade;
+	private double[] ultimaPosicao;
+	private double ultimaVelocidade;
 	
-	public InformacoesCarro(int carroId, double ultimoTempo, ParOrdenado ultimaPosicao, ParOrdenado ultimaVelocidade)
+	public InformacoesCarro(int carroId, double ultimoTempo, double[] ultimaPosicao, double ultimaVelocidade)
 	{
 		this.carroId = carroId;
 		this.ultimoTempo = ultimoTempo;
-		this.ultimaPosicao =  new ParOrdenado(ultimaPosicao.getX(), ultimaPosicao.getY());
-		this.ultimaVelocidade = new ParOrdenado(ultimaVelocidade.getX(), ultimaVelocidade.getY());
+		this.ultimaPosicao[0] = ultimaPosicao[0];
+		this.ultimaPosicao[1] = ultimaPosicao[1];
+		this.ultimaVelocidade = ultimaVelocidade;
 	}
 	
 	public double getUltimoTempo()
@@ -28,20 +29,21 @@ public class InformacoesCarro
 		this.carroId = carroId;
 	}
 
-	public ParOrdenado getUltimaPosicao() {
+	public double[] getUltimaPosicao() {
 		return ultimaPosicao;
 	}
 
-	public void setUltimaPosicao(ParOrdenado ultimaPosicao) {
-		this.ultimaPosicao = new ParOrdenado(ultimaPosicao.getX(), ultimaPosicao.getY());
+	public void setUltimaPosicao(double[] ultimaPosicao) {
+		this.ultimaPosicao[0] = ultimaPosicao[0];
+		this.ultimaPosicao[1] = ultimaPosicao[1];
 	}
 
-	public ParOrdenado getUltimaVelocidade() {
+	public double getUltimaVelocidade() {
 		return ultimaVelocidade;
 	}
 
-	public void setUltimaVelocidade(ParOrdenado ultimaVelocidade) {
-		this.ultimaVelocidade = new ParOrdenado(ultimaVelocidade.getX(), ultimaVelocidade.getY());
+	public void setUltimaVelocidade(double ultimaVelocidade) {
+		this.ultimaVelocidade = ultimaVelocidade;
 	}
 
 	public void setUltimoTempo(double ultimoTempo) {

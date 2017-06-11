@@ -7,7 +7,6 @@ import java.util.HashMap;
 import CarrosParaTeste.*;
 import Util.InformacoesCarro;
 import Util.Infracao;
-import Util.ParOrdenado;
 import Util.TipoInfracoes;
 
 public class Supervisor implements ObservadorSupervisor{
@@ -80,8 +79,8 @@ public class Supervisor implements ObservadorSupervisor{
 	{
 		int carroId = carro.getCarroId();
 		double ultimoTempo = infoCarro.getUltimoTempo();
-		ParOrdenado posicao = carro.getPosicao();
-		ParOrdenado velocidade  = carro.getVelocidade();
+		double[] posicao = carro.getPosicao();
+		double velocidade  = carro.getVelocidade();
 		System.out.println("A variação do tempo é " + (tempoAtual - informacoesCarros.get(1).getUltimoTempo()));
 		if(novo)
 		{//apenas as mutas para carro novo
@@ -108,20 +107,22 @@ public class Supervisor implements ObservadorSupervisor{
 		else
 		{
 			// regra 2 
-		    ParOrdenado parC = carro.getPosicao();		
+			//int via = getVia(par1);
+		    double[] parC = carro.getPosicao();
 			int viaC=getVia(parC);
 			Collection<Carro> todosCarros = carros.values();
 			for (Carro c1 : todosCarros){
-				ParOrdenado parC1 = c1.getPosicao();
+				double[] parC1 = c1.getPosicao();
 				int viaC1 = getVia(parC1);
-				if (viaC==viaC1){ //se as vias são iguais posso multar
+				if (viaC==viaC1)
+				{ //se as vias são iguais posso multar
 					if(viaC1==1 ||viaC1==3 ||viaC1==6 ||viaC1==8)
 					{ //nessas vias se ele esta atrás do carro sua coordenada e menor
-						double x = parC.getX();
-						double x1 = parC1.getX();
-						double y = parC.getY();
-						double y1 = parC1.getY();
-						if ((y>y1)||(x>x1))
+						double x = parC[0];
+						double x1 = parC1[0];
+						double y = parC[1];
+						double y1 = parC1[1];
+						if ((y>y1)||(x>x1)) 
 						{ //coordenada maior?
 							if (verifRegra2(parC,parC1)) 
 							{
@@ -132,14 +133,13 @@ public class Supervisor implements ObservadorSupervisor{
 							}
 						}
 					}
-					
-					else if(viaC1==2 ||viaC1==4 ||viaC1==5 ||viaC1==7)
-					{ //nessas vias se ele esta atrás do carro sua coordenada e maior
-						double x = parC.getX();
-						double x1 = parC1.getX();
-						double y = parC.getY();
-						double y1 = parC1.getY();
-						if ((y<y1)||(x<x1)) { //coordenada menor?
+					else if(viaC1==2 ||viaC1==4 ||viaC1==5 ||viaC1==7){ //nessas vias se ele esta atrás do carro sua coordenada e maior
+						double x = parC[0];
+						double x1 = parC1[0];
+						double y = parC[1];
+						double y1 = parC1[1];
+						if ((y<y1)||(x<x1)) 
+						{ //coordenada menor?
 							if (verifRegra2(parC,parC1))
 							{
 								Infracao infracao = new Infracao(carroId, 5 ,  TipoInfracoes.REGRA2.getTipoInfracao());
@@ -151,7 +151,7 @@ public class Supervisor implements ObservadorSupervisor{
 					}
 				}
 			}
-		//multando pela regra 3
+			//multando pela regra 3
 			if (verifRegra3(velocidade))
 			{
 				Infracao infracao = new Infracao(carroId, 5 ,  TipoInfracoes.REGRA3.getTipoInfracao());
@@ -183,12 +183,13 @@ public class Supervisor implements ObservadorSupervisor{
 		{
 			jaVerifiqueiRegra6 = true;
 			VerifRegra6();
-		}
+		}		
 	}
 
 	public ArrayList<Infracao> getInfracoes(){
 		ArrayList<Infracao> copiaInfracoes = new ArrayList<Infracao>() ;
-		for(Infracao i: infracoes){
+		for(Infracao i: infracoes)
+		{
 			Infracao infracao = new Infracao(i.getIdCarro(), i.getPontuacao(), i.getTipoInfracao());
 			copiaInfracoes.add(infracao);
 		}
@@ -196,43 +197,53 @@ public class Supervisor implements ObservadorSupervisor{
 	}
 
 	
-	private int getVia(ParOrdenado par1){
-		double valorX= par1.getX();
-		double valorY= par1.getY();
+	private int getVia(double[] par1)
+	{
+		double valorX= par1[0];
+		double valorY= par1[1];
 		
-		if (valorX>-20 && valorX<20 && valorY>-20 && valorY<20 ){
+		if (valorX>-20 && valorX<20 && valorY>-20 && valorY<20 )
+		{
 			return 0;
 		}
 		
-		else if (valorY==10 && valorX<-20){
+		else if (valorY==10 && valorX<-20)
+		{
 			return 1;
 		}
 		
-		else if (valorY==-10 && valorX<-20){
+		else if (valorY==-10 && valorX<-20)
+		{
 			return 2;
 		}
 
-		else if (valorY<-20 && valorX==-10){
+		else if (valorY<-20 && valorX==-10)
+		{
 			return 3;
 		}
 		
-		else if (valorY<-20 && valorX==10){
+		else if (valorY<-20 && valorX==10)
+		{
 			return 4;
 		}
 
-		else if (valorY==-10 && valorX>20){
+		else if (valorY==-10 && valorX>20)
+		{
 			return 5;
 		}
 
-		else if (valorY==10 && valorX>20){
+		else if (valorY==10 && valorX>20)
+		{
 			return 6; 
 		}
 
-		else if (valorY>20 && valorX==10){
+		else if (valorY>20 && valorX==10)
+		{
 			return 7;
 		}
 
-		else if (valorY>20 && valorX==-10){
+		else if (valorY>20 && valorX==-10)
+		{
 			return 8;
 		}
 		
@@ -240,19 +251,24 @@ public class Supervisor implements ObservadorSupervisor{
 			return -1;
 	}
 	
-	private int getLocalizarPare(ParOrdenado par1){
-		double valorX= par1.getX();
-		double valorY= par1.getY();
-		if (valorX==-10 && valorY==20){
+	private int getLocalizarPare(double[] par1)
+	{
+		double valorX= par1[0];
+		double valorY= par1[1];
+		if (valorX==-10 && valorY==20)
+		{
 			return 1;
 		}
-		else if (valorX==-20 && valorY==-10){
+		else if (valorX==-20 && valorY==-10)
+		{
 			return 2;
 		}		
-		else if (valorX==20 && valorY==10){
+		else if (valorX==20 && valorY==10)
+		{
 			return 3;
 		}		
-		else if (valorX==10 && valorY==-20){
+		else if (valorX==10 && valorY==-20)
+		{
 			return 4;
 		}
 		else
@@ -260,10 +276,10 @@ public class Supervisor implements ObservadorSupervisor{
 }
 	
 	//Regra 1 é a regra da distancia inicial < 100
-	private boolean verifRegra1 (ParOrdenado par1)
+	private boolean verifRegra1 (double[] par1)
 	{ 
-		double valorX= par1.getX();
-		double valorY= par1.getY();
+		double valorX= par1[0];
+		double valorY= par1[1];
 		double distancia = Math.sqrt(Math.pow(valorX,2) + Math.pow(valorY,2));
 		
 		if(distancia<distMinPare)
@@ -271,7 +287,8 @@ public class Supervisor implements ObservadorSupervisor{
 			return true;
 		}
 		
-		else{
+		else
+		{
 			return false;
 		}		
 	}
@@ -286,13 +303,13 @@ public class Supervisor implements ObservadorSupervisor{
 	 */
 
 	//Regra 2 é a regra da distancia entre carros < 2
-	private boolean verifRegra2 (ParOrdenado par1, ParOrdenado par2)
+	private boolean verifRegra2 (double[] par1, double[] par2)
 	{
-		double valorX1= par1.getX();
-		double valorY1= par1.getY();
+		double valorX1= par1[0];
+		double valorY1= par1[1];
 		
-		double valorX2= par2.getX();
-		double valorY2= par2.getY();
+		double valorX2= par2[0];
+		double valorY2= par2[1];
 
 		double distancia = Math.sqrt(Math.pow(valorX1-valorX2,2) + Math.pow(valorY1-valorY2,2));
 		
@@ -307,12 +324,8 @@ public class Supervisor implements ObservadorSupervisor{
 	}
 	
 	//Regra 3 é a regra da velocidade > 10
-	private boolean verifRegra3 (ParOrdenado par1)
+	private boolean verifRegra3 (double velocidade)
 	{ 
-		double valorX= par1.getX();
-		double valorY= par1.getY();
-		double velocidade = Math.sqrt(Math.pow(valorX,2) + Math.pow(valorY,2));
-		
 		if(velocidade>velMax)
 		{
 			return true;
@@ -325,12 +338,8 @@ public class Supervisor implements ObservadorSupervisor{
 	
 	// Regra 4 Aceleracao != 1 km/h a cada 0.5 s NÃO ESTÁ FEITA !!!
 
-	private boolean verifRegra4 (ParOrdenado par1, double tempoAtual, double ultimoTempo)
+	private boolean verifRegra4 (double velocidade, double tempoAtual, double ultimoTempo)
 	{ 
-		double valorX1= par1.getX();
-		double valorY1= par1.getY();
-		
-		double velocidade = Math.sqrt(Math.pow(valorX1,2) + Math.pow(valorY1,2));
 		double aceleracao = velocidade/(tempoAtual-ultimoTempo); 
 		
 		if(aceleracao>acelMax)
@@ -338,24 +347,22 @@ public class Supervisor implements ObservadorSupervisor{
 			return true;
 		}
 		
-		else{
+		else
+		{
 			return false;
 		}		
 	}
 	
 	//Regra 5 é a regra da velocidade inicial > 0
-	private boolean verifRegra5 (ParOrdenado par1)
-	{ 
-		double valorX= par1.getX();
-		double valorY= par1.getY();
-		double velocidade = Math.sqrt(Math.pow(valorX,2) + Math.pow(valorY,2));
-		
+	private boolean verifRegra5 (double velocidade)
+	{
 		if(velocidade>0)
 		{
 			return true;
 		}
 		
-		else{
+		else
+		{
 			return false;
 		}		
 	}
@@ -442,7 +449,7 @@ public class Supervisor implements ObservadorSupervisor{
 	 *  a distancia X ou Y dele é fixa e pré-estabelecida pra cada via
 	 *  Se a distancia não for a mesma, significa que ele virou pro lado errado. 
 	 */
-	private boolean verifRegra7 (ParOrdenado par1)
+	private boolean verifRegra7 (double[] par1)
 	{
 		return false;
 	}
@@ -450,22 +457,21 @@ public class Supervisor implements ObservadorSupervisor{
 	
 	// Regra 8 Velocidade no PARE != 0
 
-	private boolean verifRegra8 (ParOrdenado par1, ParOrdenado par2)
+	private boolean verifRegra8 (double[] posicao, double velocidade)
 	{ 
-		double valorX= par2.getX();
-		double valorY= par2.getY();
+		double valorX= posicao[0];
+		double valorY= posicao[1];
 		
-		double velocidade =  Math.sqrt(Math.pow(valorX,2) + Math.pow(valorY,2));; //aqui temos que saber
-		//qual o tempo que temos que dividir a velocidade 
 		
-		int i = getLocalizarPare(par1);
+		int i = getLocalizarPare(posicao);
 		if (i!=-1)
 		{
 			if(velocidade>0)
 			{
 				return true;
 			}
-			else{
+			else
+			{
 				return false;
 			}
 		}
@@ -474,4 +480,10 @@ public class Supervisor implements ObservadorSupervisor{
 			return false;
 		}
 	}
+	
+	public void Teste()
+	{
+		
+	}
+
 }
