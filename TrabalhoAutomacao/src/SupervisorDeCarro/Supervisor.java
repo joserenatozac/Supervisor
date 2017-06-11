@@ -480,10 +480,4 @@ public class Supervisor implements ObservadorSupervisor{
 			return false;
 		}
 	}
-	
-	public void Teste()
-	{
-		
-	}
-
 }
