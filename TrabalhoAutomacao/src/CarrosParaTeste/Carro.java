@@ -85,4 +85,8 @@ public class Carro implements ObservadoSupervisor
 		return sentidoConversao;
 	}
 	
+	public void autorizaConv(int num)
+	{
+		
+	}
 }

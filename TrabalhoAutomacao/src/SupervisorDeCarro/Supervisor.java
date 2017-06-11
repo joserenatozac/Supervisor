@@ -517,14 +517,9 @@ public class Supervisor implements ObservadorSupervisor{
 		}
 		if(carroFazendoConversao == null && carrosNoPare.size() > 0)
 		{
-			chamarMetodoQuePermiteCarroFazerConversao(carrosNoPare.remove(0));
+			Carro carroAux = carrosNoPare.remove(0);
+			carroAux.autorizaConv(1);
 		}
-	}
-
-	private void chamarMetodoQuePermiteCarroFazerConversao(Carro carro)
-	{
-		// TODO Alguma coisa que deixa o carro fazer a curva
-		carroFazendoConversao = carro;
 	}
 
 	private int calculaViaDesejada(int sentidoConversao, int via)
